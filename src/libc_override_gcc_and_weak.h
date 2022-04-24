@@ -212,7 +212,11 @@ extern "C" {
   void free(void* ptr) __THROW                    ALIAS(tc_free);
   void* realloc(void* ptr, size_t size) __THROW   ALIAS(tc_realloc);
   void* calloc(size_t n, size_t size) __THROW     ALIAS(tc_calloc);
-  void cfree(void* ptr) __THROW                   ALIAS(tc_cfree);
+#ifndef __QNX__
+   void cfree(void* ptr) __THROW                   ALIAS(tc_cfree);
+#else
+  int cfree(void* ptr) __THROW                   ALIAS(tc_cfree);
+#endif
   void* memalign(size_t align, size_t s) __THROW  ALIAS(tc_memalign);
   void* aligned_alloc(size_t align, size_t s) __THROW ALIAS(tc_memalign);
   void* valloc(size_t size) __THROW               ALIAS(tc_valloc);

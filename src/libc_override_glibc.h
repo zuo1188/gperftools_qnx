@@ -76,7 +76,11 @@ extern "C" {
   void __libc_free(void* ptr)                     ALIAS(tc_free);
   void* __libc_realloc(void* ptr, size_t size)    ALIAS(tc_realloc);
   void* __libc_calloc(size_t n, size_t size)      ALIAS(tc_calloc);
-  void __libc_cfree(void* ptr)                    ALIAS(tc_cfree);
+#ifndef __QNX__
+   void  cfree(void* p)                           { tc_cfree(p);               }
+#else
+  int  cfree(void* p)                           { tc_cfree(p);               }
+#endif
   void* __libc_memalign(size_t align, size_t s)   ALIAS(tc_memalign);
   void* __libc_valloc(size_t size)                ALIAS(tc_valloc);
   void* __libc_pvalloc(size_t size)               ALIAS(tc_pvalloc);

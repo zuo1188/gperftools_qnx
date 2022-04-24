@@ -1266,7 +1266,9 @@ extern "C" PERFTOOLS_DLL_DECL void* tc_calloc(size_t count, size_t size) PERFTOO
   return block;
 }
 
-extern "C" PERFTOOLS_DLL_DECL void tc_cfree(void* ptr) PERFTOOLS_NOTHROW {
+
+#ifndef __QNX__
+ extern "C" PERFTOOLS_DLL_DECL void tc_cfree(void* ptr) PERFTOOLS_NOTHROW {
   if (tcmalloc::IsEmergencyPtr(ptr)) {
     return tcmalloc::EmergencyFree(ptr);
   }
@@ -1274,7 +1276,18 @@ extern "C" PERFTOOLS_DLL_DECL void tc_cfree(void* ptr) PERFTOOLS_NOTHROW {
   DebugDeallocate(ptr, MallocBlock::kMallocType, 0);
   force_frame();
 }
-
+#else
+extern "C" PERFTOOLS_DLL_DECL int tc_cfree(void* ptr) PERFTOOLS_NOTHROW {
+  if (tcmalloc::IsEmergencyPtr(ptr)) {
+    tcmalloc::EmergencyFree(ptr);
+    return 0;
+  }
+  MallocHook::InvokeDeleteHook(ptr);
+  DebugDeallocate(ptr, MallocBlock::kMallocType, 0);
+  force_frame();
+  return 0;
+}
+#endif
 extern "C" PERFTOOLS_DLL_DECL void* tc_realloc(void* ptr, size_t size) PERFTOOLS_NOTHROW {
   if (tcmalloc::IsEmergencyPtr(ptr)) {
     return tcmalloc::EmergencyRealloc(ptr, size);

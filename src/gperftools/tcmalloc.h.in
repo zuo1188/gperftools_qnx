@@ -93,7 +93,11 @@ extern "C" {
   PERFTOOLS_DLL_DECL void tc_free_sized(void *ptr, size_t size) PERFTOOLS_NOTHROW;
   PERFTOOLS_DLL_DECL void* tc_realloc(void* ptr, size_t size) PERFTOOLS_NOTHROW;
   PERFTOOLS_DLL_DECL void* tc_calloc(size_t nmemb, size_t size) PERFTOOLS_NOTHROW;
-  PERFTOOLS_DLL_DECL void tc_cfree(void* ptr) PERFTOOLS_NOTHROW;
+#ifndef __QNX__
+   PERFTOOLS_DLL_DECL void tc_cfree(void* ptr) PERFTOOLS_NOTHROW;
+#else
+  PERFTOOLS_DLL_DECL int tc_cfree(void* ptr) PERFTOOLS_NOTHROW;
+#endif
 
   PERFTOOLS_DLL_DECL void* tc_memalign(size_t __alignment,
                                        size_t __size) PERFTOOLS_NOTHROW;

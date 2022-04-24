@@ -2,6 +2,7 @@
 *.la
 *.lo
 *~
+/build
 /*.log
 /*.trs
 /.deps
@@ -146,3 +147,4 @@
 /test-driver
 /thread_dealloc_unittest
 /thread_dealloc_unittest.exe
+.vscode/settings.json

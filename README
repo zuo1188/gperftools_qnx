@@ -1,5 +1,29 @@
+QNX 编译步骤
+----------
+cd gperftools
+./autogen.sh
+#这步若报错未定义LIBTOOL宏需先安装libtool：
+#sudo apt install libtool-bin
+ 
+mkdir build
+cd build
+ 
+source qnx_env.sh
+export CC=ntoaarch64-gcc
+export CXX=ntoaarch64-g++
+ 
+../configure --host=aarch64-qnx CFLAGS="-fpic -D_QNX_SOURCE -std=c99" CXXFLAGS="-fpic -D_QNX_SOURCE -std=gnu++11" LIBS="-lc -lc++" --disable-cpu-profiler --disable-heap-profiler --disable-heap-checker --disable-debugalloc --enable-minimal --enable-shared
+
+在/build/src/config.h中将HAVE_SYS_SOCKET_H与HAVE_TLS注释掉
+
+make -j4
+生成的libtcmalloc_minimal.so.9在/build/.libs/文件夹
+
+
+
 gperftools
 ----------
+
 (originally Google Performance Tools)
 
 The fastest malloc we’ve seen; works particularly well with threads

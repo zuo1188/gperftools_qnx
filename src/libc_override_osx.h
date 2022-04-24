@@ -202,7 +202,11 @@ boolean_t mi_zone_locked(malloc_zone_t *zone) {
 // support either memalign() or posix_memalign().  If you need them
 // and are willing to code to tcmalloc, you can use tc_posix_memalign().
 extern "C" {
-  void  cfree(void* p)                   { tc_cfree(p);               }
+#ifndef __QNX__
+   void  cfree(void* p)                   { tc_cfree(p);               }
+#else
+  int  cfree(void* p)                   { tc_cfree(p);               }
+#endif
   void* pvalloc(size_t s)                { return tc_pvalloc(s);      }
   void malloc_stats(void)                { tc_malloc_stats();         }
   int mallopt(int cmd, int v)            { return tc_mallopt(cmd, v); }

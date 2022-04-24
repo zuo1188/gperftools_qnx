@@ -230,8 +230,14 @@ extern "C" {
       ATTRIBUTE_SECTION(google_malloc);
   void* tc_calloc(size_t nmemb, size_t size) PERFTOOLS_NOTHROW
       ATTRIBUTE_SECTION(google_malloc);
-  void tc_cfree(void* ptr) PERFTOOLS_NOTHROW
+
+#ifndef __QNX__
+   void tc_cfree(void* ptr) PERFTOOLS_NOTHROW
+       ATTRIBUTE_SECTION(google_malloc);
+#else
+  int tc_cfree(void* ptr) PERFTOOLS_NOTHROW
       ATTRIBUTE_SECTION(google_malloc);
+#endif
 
   void* tc_memalign(size_t __alignment, size_t __size) PERFTOOLS_NOTHROW
       ATTRIBUTE_SECTION(google_malloc);
@@ -1987,7 +1993,13 @@ extern "C" PERFTOOLS_DLL_DECL void* tc_calloc(size_t n,
   return result;
 }
 
-extern "C" PERFTOOLS_DLL_DECL void tc_cfree(void* ptr) PERFTOOLS_NOTHROW
+
+#ifndef __QNX__
+ extern "C" PERFTOOLS_DLL_DECL void tc_cfree(void* ptr) PERFTOOLS_NOTHROW
+#else
+ extern "C" PERFTOOLS_DLL_DECL int tc_cfree(void* ptr) PERFTOOLS_NOTHROW
+#endif
+
 #ifdef TC_ALIAS
 TC_ALIAS(tc_free);
 #else
